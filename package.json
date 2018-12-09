@@ -1,0 +1,24 @@
+{
+  "name": "cli_dict",
+  "version": "1.0.0",
+  "description": "Command line dictionary tool",
+  "main": "dict.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rrkjonnapalli/cli_dict.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rrkjonnapalli/cli_dict/issues"
+  },
+  "homepage": "https://github.com/rrkjonnapalli/cli_dict#readme",
+  "dependencies": {
+    "config": "^3.0.0",
+    "request": "^2.88.0"
+  }
+}
