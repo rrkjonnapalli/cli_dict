@@ -137,8 +137,7 @@ class Game {
 
   showHint() {
     let n = this.hintTypes.length;
-
-    let hidx = getRandomInt(n); //2; // one of the random hint
+    let hidx = Dict.getRandomInt(n); //2; // one of the random hint
     let type = this.hintTypes[hidx];
     let hint = this.getHint(type);
     if (!hint) {

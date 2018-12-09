@@ -110,7 +110,7 @@ let _formatResult = (results, opts, cb) => {
 class Dict {
 
   static getRandomInt(max) {
-    Math.floor(Math.random() * Math.floor(max));
+    return Math.floor(Math.random() * Math.floor(max));
   }
 
   static _details(word, opts, cb) {
