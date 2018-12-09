@@ -11,7 +11,9 @@ let options = {
 };
 
 let getWordOfDay = (cb) => {
-  cb(null, 'bad');
+  let words = ['abrupt', 'beautiful', 'delicate', 'delightful', 'firm', 'light', 'truth', 'quick', 'Willful', 'Brutal', 'Cheerful', 'Uneasy', 'Random', 'Expert', 'Wicked', 'Never', 'long', 'possible', 'loud'];
+  let idx = Dict.getRandomInt(words.length);
+  cb(null, words[idx].toLowerCase());
 };
 
 
@@ -107,6 +109,9 @@ let _formatResult = (results, opts, cb) => {
 
 class Dict {
 
+  static getRandomInt(max) {
+    Math.floor(Math.random() * Math.floor(max));
+  }
 
   static _details(word, opts, cb) {
     options.url = `https://od-api.oxforddictionaries.com/api/v1/entries/en/${word}`;

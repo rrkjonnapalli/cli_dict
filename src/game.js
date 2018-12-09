@@ -2,10 +2,10 @@
 const rl = require('readline');
 const Dict = require('./dict');
 
-let getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max));
-
 let getRandomWord = (cb) => {
-  cb(null, 'hello');
+  let words = ['abrupt', 'beautiful', 'delicate', 'delightful', 'firm', 'light', 'truth', 'quick', 'Willful', 'Brutal', 'Cheerful', 'Uneasy', 'Random', 'Expert', 'Wicked', 'Never', 'long', 'possible', 'loud'];
+  let idx = Dict.getRandomInt(words.length);
+  cb(null, words[idx].toLowerCase());
 };
 
 let readline = null;
