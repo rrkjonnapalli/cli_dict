@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/rrkjonnapalli/cli_dict#readme",
   "dependencies": {
+    "async": "^2.6.1",
     "config": "^3.0.0",
     "request": "^2.88.0"
   }
