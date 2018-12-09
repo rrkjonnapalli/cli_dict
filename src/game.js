@@ -13,6 +13,7 @@ let readline = null;
 class Game {
 
   constructor() {
+    this.gameCount = 0;
     readline = rl.createInterface({
       input: process.stdin,
       output: process.stdout
@@ -26,7 +27,6 @@ class Game {
   initialize(cb) {
     console.log('Loading...');
     this.hintTypes = ['definitions', 'synonyms', 'antonyms', 'random'];
-    this.gameCount = 0;
     this.defCount = 0;
     this.synCount = 0;
     this.antCount = 0;
@@ -44,8 +44,12 @@ class Game {
 
   startPlay() {
     this.gameCount += 1;
+    if (this.gameCount > 4) {
+      console.log('Please restart the game to play again!!!');
+      process.exit(0);
+    }
     readline.question('Press enter to continue...', (answer) => {
-      if (answer === '') this.start();
+      this.start();
     });
   }
 
@@ -79,7 +83,6 @@ class Game {
       }
       switch (choice) {
         case 1:
-          this.gameCount += 1;
           if (this.gameCount > 3) {
             console.log('Take some rest and play again...');
             console.log('Exiting.....');
@@ -96,7 +99,7 @@ class Game {
           return;
         default:
           console.log('Invalid option!!! Choose a correct option.');
-          this.showInGameMenu();
+          this.showAfterGameMenu();
       }
     });
   }
