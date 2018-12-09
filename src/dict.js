@@ -28,6 +28,83 @@ let _handleRequest = (options, cb) => {
   });
 };
 
+let _formatResult = (results, opts, cb) => {
+  let DEFINITIONS = [];
+  let EXAMPLES = [];
+  let SYNONYMS = [];
+  let ANTONYMS = [];
+
+  if (typeof results === 'object' && results.error) {
+    let result = {};
+    for (let key of Object.keys(opts)) {
+      result[key] = [];
+    }
+    return cb(null, result);
+  }
+
+  for (let result of results) {
+    let lEntries = result.lexicalEntries;
+    if (!lEntries || !lEntries.length) continue;
+    for (let lEntry of lEntries) {
+      let entries = lEntry.entries;
+      if (!entries || !entries.length) continue;
+      for (let entry of entries) {
+        let senses = entry.senses;
+        if (!senses || !senses.length) continue;
+        for (let sense of senses) {
+          // definitions
+          if (opts.definitions) {
+            let definitions = sense.definitions || [];
+            definitions = definitions.concat(sense.short_definitions || []);
+            for (let dfn of definitions) {
+              let val = dfn.toLowerCase();
+              if (DEFINITIONS.includes(val)) continue;
+              DEFINITIONS.push(val);
+            }
+          }
+
+          // examples
+          if (opts.examples) {
+            let examples = sense.examples || [];
+            for (let ex of examples) {
+              let val = ex.text.toLowerCase();
+              if (EXAMPLES.includes(val)) continue;
+              EXAMPLES.push(val);
+            }
+          }
+
+          // synonyms
+          if (opts.synonyms) {
+            let synonyms = sense.synonyms || [];
+            for (let synonym of synonyms) {
+              let val = synonym.text.toLowerCase();
+              if (SYNONYMS.includes(val)) continue;
+              SYNONYMS.push(val);
+            }
+          }
+
+          // antonyms
+          if (opts.antonyms) {
+            let antonyms = sense.antonyms || [];
+            for (let antonym of antonyms) {
+              let val = antonym.text.toLowerCase();
+              if (ANTONYMS.includes(val)) continue;
+              ANTONYMS.push(val);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  let result = {};
+  if (opts.definitions) result.definitions = DEFINITIONS;
+  if (opts.examples) result.examples = EXAMPLES;
+  if (opts.synonyms) result.synonyms = SYNONYMS;
+  if (opts.antonyms) result.antonyms = ANTONYMS;
+  cb(null, result);
+};
+
 class Dict {
 
 
@@ -38,7 +115,7 @@ class Dict {
       opts = { definitions: true };
     }
     _handleRequest(options, (_, results) => {
-      cb(null, results);
+      _formatResult(results, opts, cb);
     });
   }
 
@@ -50,14 +127,14 @@ class Dict {
     options.url = `https://od-api.oxforddictionaries.com/api/v1/entries/en/${word}/synonyms`;
 
     _handleRequest(options, (_, results) => {
-      cb(null, results);
+      _formatResult(results, { synonyms: true }, cb);
     });
   }
 
   static antonyms(word, cb) {
     options.url = `https://od-api.oxforddictionaries.com/api/v1/entries/en/${word}/antonyms`;
     _handleRequest(options, (_, results) => {
-      cb(null, results);
+      _formatResult(results, { antonyms: true }, cb);
     });
   }
 
@@ -78,7 +155,11 @@ class Dict {
       }
     ], (err, results) => {
       if (err) return cb(err);
-      cb(null, results);
+      let result = {};
+      for (let data of results) {
+        Object.assign(result, data);
+      }
+      cb(null, result);
     });
   }
 
