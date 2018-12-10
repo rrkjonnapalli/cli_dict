@@ -1,6 +1,7 @@
 'use strict';
 const rl = require('readline');
 const Dict = require('./dict');
+const getJumbledWords = require('../utils/permuteWords');
 
 let getRandomWord = (cb) => {
   let words = ['abrupt', 'beautiful', 'delicate', 'delightful', 'firm', 'light', 'truth', 'quick', 'Willful', 'Brutal', 'Cheerful', 'Uneasy', 'Random', 'Expert', 'Wicked', 'Never', 'long', 'possible', 'loud'];
@@ -26,16 +27,18 @@ class Game {
 
   initialize(cb) {
     console.log('Loading...');
-    this.hintTypes = ['definitions', 'synonyms', 'antonyms', 'random'];
+    this.hintTypes = ['definitions', 'synonyms', 'antonyms', 'randoms'];
     this.defCount = 0;
     this.synCount = 0;
     this.antCount = 0;
+    this.randCount = 0;
     this.showedSynonyms = [];
     getRandomWord((err, word) => {
       this.word = word;
       if (err) throw new Error(err);
       Dict.get(word, (error, data) => {
         console.log('Loading completed!!!');
+        data.randoms = getJumbledWords(word);
         this.info = data;
         cb();
       });
@@ -168,8 +171,10 @@ class Game {
     else if (type === 'antonyms' && this.antCount < (hints.length || 0)) {
       this.antCount += 1;
       return this.info[type][this.antCount - 1];
-    }
-    else return null;
+    } else if (type == 'randoms' && this.randCount < (hints.length || 0)) {
+      this.randCount += 1;
+      return this.info[type][this.randCount - 1];
+    } else return null;
   }
 
   getAnswer() {
