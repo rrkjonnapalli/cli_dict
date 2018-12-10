@@ -26,6 +26,8 @@ let getJumbledWords = (str) => {
   let strArr = Array.from(str);
   let n = strArr.length;
   permutations(strArr, 0, n - 1);
+  let idx = words.indexOf(str);
+  words.splice(idx, 1);
   return words;
 };
 
